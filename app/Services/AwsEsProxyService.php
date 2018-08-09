@@ -5,9 +5,7 @@ namespace App\Services;
 use GuzzleHttp;
 use Proxy\Proxy;
 use Proxy\Adapter\Guzzle\GuzzleAdapter;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\RequestInterface;
-use Zend\Diactoros\Uri;
 
 class AwsEsProxyService
 {
@@ -19,9 +17,9 @@ class AwsEsProxyService
      * @throws [type] [description]
      */
     public function run($request, string $endpoint, string $path, array $params = [])
-    {       
+    {
         //We need to convert the original request and remove port
-        $request = $this->getModifiedRequest($request, $path);
+        $request = $this->getModifiedRequest($request);
 
         // Create a guzzle client
         $guzzle = new GuzzleHttp\Client();
@@ -31,14 +29,26 @@ class AwsEsProxyService
 
         // Forward the request and get the response.
         $response = $proxy->forward($request)
+                          ->filter(function ($request, $response, $next) use ($path) {
+                              $request_uri = $request->getUri();
+                              $request = $request->withUri(
+                                  $request_uri->withPath($path)
+                              );
+
+                              // Call the next item in the middleware.
+                              $response = $next($request, $response);
+
+                              return $response;
+                          })
                           ->filter(function ($request, $response, $next) use ($params, $endpoint) {
-                            // Manipulate the request object.
-                            $request = $this->getSignedRequest($request, $params);
+                              // Manipulate the request object.
+                              $request = $this->getSignedRequest($request, $params);
+                              // dd($request);
 
-                            // Call the next item in the middleware.
-                            $response = $next($request, $response);
+                              // Call the next item in the middleware.
+                              $response = $next($request, $response);
 
-                            return $response;
+                              return $response;
                           })
                           ->to($endpoint);
 
@@ -47,18 +57,19 @@ class AwsEsProxyService
     }
 
     /**
-     * Removes Port 
-     * @param  [type] $request      [description]
-     * @return [type]               [description]
+     * Removes Port.
+     *
+     * @param [type] $request [description]
+     *
+     * @return [type] [description]
+     *
      * @throws [type] [description]
      */
-    private function getModifiedRequest($request, $path)
+    private function getModifiedRequest($request)
     {
         $request_uri = $request->getUri();
-        return $request->withUri(
-            $request_uri->withPort(null)
-                        ->withPath($path)
-        );
+
+        return $request->withUri($request_uri->withPort(null));
     }
 
     /**
@@ -71,7 +82,7 @@ class AwsEsProxyService
      * @throws [type] [description]
      */
     private function getSignedRequest(RequestInterface $request, array $params = [])
-    {       
+    {
         //Remove Connection header as it create issues with signing
         $request = $request->withoutHeader('connection');
 

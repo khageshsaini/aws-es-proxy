@@ -11,4 +11,4 @@
 |
 */
 
-Route::get('{path}', 'ProxyController@__invoke')->where('path', '.*');
+Route::any('{path}', 'ProxyController@__invoke')->where('path', '.*');
