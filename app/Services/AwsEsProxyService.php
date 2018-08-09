@@ -18,11 +18,10 @@ class AwsEsProxyService
      *
      * @throws [type] [description]
      */
-    public function run($request, string $endpoint, array $params = [])
+    public function run($request, string $endpoint, string $path, array $params = [])
     {       
-
         //We need to convert the original request and remove port
-        $request = $this->getModifiedRequest($request);
+        $request = $this->getModifiedRequest($request, $path);
 
         // Create a guzzle client
         $guzzle = new GuzzleHttp\Client();
@@ -53,10 +52,13 @@ class AwsEsProxyService
      * @return [type]               [description]
      * @throws [type] [description]
      */
-    private function getModifiedRequest($request)
+    private function getModifiedRequest($request, $path)
     {
         $request_uri = $request->getUri();
-        return $request->withUri($request_uri->withPort(null));
+        return $request->withUri(
+            $request_uri->withPort(null)
+                        ->withPath($path)
+        );
     }
 
     /**

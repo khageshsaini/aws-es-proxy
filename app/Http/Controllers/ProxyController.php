@@ -8,8 +8,8 @@ use Zend\Diactoros\Request;
 
 class ProxyController extends Controller
 {
-    public function __invoke(AwsEsProxyService $proxy, ServerRequestInterface $request)
+    public function __invoke(AwsEsProxyService $proxy, ServerRequestInterface $request, string $path)
     {		
-        return $proxy->run($request, config('aws.endpoint'));
+        return $proxy->run($request, config('aws.endpoint'), $path);
     }
 }
