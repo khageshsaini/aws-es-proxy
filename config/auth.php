@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'aws',
         'passwords' => 'users',
     ],
 
@@ -45,6 +45,11 @@ return [
             'driver' => 'token',
             'provider' => 'users',
         ],
+
+        'aws' => [
+            'driver' => 'aws-session',
+            'provider' => 'aws'
+        ]
     ],
 
     /*
@@ -69,6 +74,9 @@ return [
             'driver' => 'eloquent',
             'model' => App\User::class,
         ],
+        'aws' => [
+            'driver' => 'aws',   
+        ]
 
         // 'users' => [
         //     'driver' => 'database',

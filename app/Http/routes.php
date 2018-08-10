@@ -11,4 +11,13 @@
 |
 */
 
-Route::any('{path}', 'ProxyController@__invoke')->where('path', '.*');
+Route::get('login', 'Auth\AuthController@showLoginForm');
+Route::post('login', 'Auth\AuthController@login');
+Route::get('logout', 'Auth\AuthController@logout');
+
+Route::get('/home', 'HomeController@index');
+
+Route::any('{path}', [
+			'middleware' => 'auth:aws',
+			'uses' => 'ProxyController@__invoke'
+		])->where('path', '.*');

@@ -82,18 +82,8 @@ class AwsEsProxyService
      * @throws [type] [description]
      */
     private function getSignedRequest(RequestInterface $request, array $params = [])
-    {
-        //Remove Connection header as it create issues with signing
-        $request = $request->withoutHeader('connection');
-
-        $service = isset($params['service']) ? $params['service'] : config('aws.service');
-        $region = isset($params['region']) ? $params['region'] : config('aws.region');
-        $options = isset($params['options']) ? $params['options'] : config('aws.options', []);
-        $credentials = isset($params['credentials']) ? $params['credentials'] : config('aws.credentials');
-
-        $signer = new \Aws\Signature\SignatureV4($service, $region, $options);
-        $credentials = new \Aws\Credentials\Credentials($credentials['key'], $credentials['secret']);
-
-        return $signer->signRequest($request, $credentials);
+    {   
+        $signer = new AwsRequestSigner($request);
+        return $signer($params);
     }
 }

@@ -7,6 +7,7 @@ use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -30,6 +31,9 @@ class AuthController extends Controller
      */
     protected $redirectTo = '/';
 
+
+    protected $redirectAfterLogout = '/login';
+
     /**
      * Create a new authentication controller instance.
      *
@@ -38,6 +42,35 @@ class AuthController extends Controller
     public function __construct()
     {
         $this->middleware($this->guestMiddleware(), ['except' => 'logout']);
+        $this->redirectTo = config('aws.redirect_path');
+    }
+
+    /**
+     * Validate the user login request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     */
+    protected function validateLogin(Request $request)
+    {
+        $this->validate($request, [
+            $this->loginUsername() => 'required', 'password' => 'required', 'endpoint' => 'url'
+        ]);
+    }
+
+    /**
+     * Get the needed authorization credentials from the request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    protected function getCredentials(Request $request)
+    {   
+        $endpoint = $request->has('endpoint') ? $request->input('endpoint') : config('aws.endpoint');
+        return array_merge(
+            $request->only($this->loginUsername(), 'password'), 
+            compact('endpoint')
+        );
     }
 
     /**
