@@ -43,7 +43,7 @@
 
                             <div class="col-md-6">
                                 <select name="endpoint" id="endpoint" class="form-control">
-                                    @foreach (config('aws.endpoints') as $alias => $link)
+                                    @foreach (collect(config('aws.endpoints'))->filter()->all() as $alias => $link)
                                         <option value="{{$link}}" selected="">{{$alias}}</option>
                                     @endforeach  
                                 </select>
