@@ -16,10 +16,17 @@ Route::post('login', 'Auth\AuthController@login');
 Route::get('logout', 'Auth\AuthController@logout');
 
 Route::get('/', function () {
-	return \Redirect::to(config('aws.redirect_path'));
+	return \Redirect::to('/home');
 });
 
+Route::get('/home', [
+	'middleware' => 'auth:aws',
+	'uses' => function () {
+		return view('home');
+	} 
+]);
+
 Route::any('{path}', [
-			'middleware' => 'auth:aws',
+			'middleware' => ['auth:aws', 'iframe_only'],
 			'uses' => 'ProxyController@__invoke'
 		])->where('path', '.*');
