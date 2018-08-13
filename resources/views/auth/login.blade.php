@@ -65,6 +65,9 @@
                         </div>
                     </form>
                 </div>
+                <div class="panel-footer text-right">
+                    Made with <span style="color: #e25555;">&#9829;</span> at VMock
+                </div>
             </div>
         </div>
     </div>
