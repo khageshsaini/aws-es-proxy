@@ -15,7 +15,9 @@ Route::get('login', 'Auth\AuthController@showLoginForm');
 Route::post('login', 'Auth\AuthController@login');
 Route::get('logout', 'Auth\AuthController@logout');
 
-Route::get('/home', 'HomeController@index');
+Route::get('/', function () {
+	return \Redirect::to(config('aws.redirect_path'));
+});
 
 Route::any('{path}', [
 			'middleware' => 'auth:aws',
