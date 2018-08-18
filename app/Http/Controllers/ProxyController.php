@@ -8,7 +8,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ProxyController extends Controller
 {
-    public function __invoke(AwsEsProxyService $proxy, ServerRequestInterface $request, string $path)
+    public function __invoke(AwsEsProxyService $proxy, ServerRequestInterface $request, $path)
     {	
     	$info = Auth::user();
     	$credentials = ['key' => $info->getAuthIdentifier(), 'secret' => $info->getAuthPassword()];

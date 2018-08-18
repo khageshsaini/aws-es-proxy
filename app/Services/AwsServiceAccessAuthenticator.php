@@ -21,7 +21,7 @@ class AwsServiceAccessAuthenticator
 	 * @return boolean               [description]
 	 * @throws [type]  [description]
 	 */
-	public function isAccessValid(string $endpoint)
+	public function isAccessValid($endpoint)
 	{
 		$request = new Request('GET', $endpoint);
 

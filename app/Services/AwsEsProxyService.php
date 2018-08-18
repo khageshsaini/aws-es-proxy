@@ -16,7 +16,7 @@ class AwsEsProxyService
      *
      * @throws [type] [description]
      */
-    public function run($request, string $endpoint, string $path, array $params = [])
+    public function run($request, $endpoint, $path, array $params = [])
     {
         //We need to convert the original request and remove port
         $request = $this->getModifiedRequest($request);
