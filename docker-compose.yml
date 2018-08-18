@@ -2,8 +2,6 @@ version: '2'
 
 services:
   web:
-    domainname: kibana.dev
-    hostname: kibana
     build:
       context: ./
       dockerfile: web.docker
