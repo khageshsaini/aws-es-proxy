@@ -10,8 +10,8 @@ return [
         'secret' => env('AWS_ACCESS_SECRET', 'secret'),
     ],
     'endpoints' => [
-    	'CMC-DEV' => env('AWS_ES_VMOCK_DEV'),
-    	'CMC-STAGING' => env('AWS_ES_VMOCK_STAGING'),
-    	'CMC-LIVE' => env('AWS_ES_VMOCK_LIVE')
+    	'CMC-LIVE' => env('AWS_ES_VMOCK_LIVE'),
+        'CMC-STAGING' => env('AWS_ES_VMOCK_STAGING'),
+        'CMC-DEV' => env('AWS_ES_VMOCK_DEV'),
     ]
 ];
