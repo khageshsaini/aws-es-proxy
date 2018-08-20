@@ -14,6 +14,8 @@ class ProxyController extends Controller
     	$credentials = ['key' => $info->getAuthIdentifier(), 'secret' => $info->getAuthPassword()];
     	$endpoint = $info->endpoint;
 
-        return $proxy->run($request, $endpoint, $path, compact('credentials'));
+    	//We don't want the control to be passed to response factory. There are issues in content type header.
+    	//We will just die the script here
+        die($proxy->run($request, $endpoint, $path, compact('credentials')));
     }
 }
